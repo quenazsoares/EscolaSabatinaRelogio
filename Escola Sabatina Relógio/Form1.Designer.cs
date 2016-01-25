@@ -215,6 +215,7 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panelConfig);
             this.DoubleBuffered = true;
+            this.HelpButton = true;
             this.MinimumSize = new System.Drawing.Size(800, 600);
             this.Name = "Form1";
             this.Text = "Escola Sabatina Relógio";

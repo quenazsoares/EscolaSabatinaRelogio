@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.lblRelogio = new System.Windows.Forms.Label();
             this.dtpHora = new System.Windows.Forms.DateTimePicker();
             this.panelConfig = new System.Windows.Forms.Panel();
@@ -96,7 +95,7 @@
             // 
             this.lblHelp.Dock = System.Windows.Forms.DockStyle.Right;
             this.lblHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblHelp.Image = ((System.Drawing.Image)(resources.GetObject("lblHelp.Image")));
+            this.lblHelp.Image = global::Escola_Sabatina_Relógio.Properties.Resources.help_icon;
             this.lblHelp.Location = new System.Drawing.Point(736, 0);
             this.lblHelp.Name = "lblHelp";
             this.lblHelp.Size = new System.Drawing.Size(48, 51);
@@ -210,7 +209,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.BackgroundImage = global::Escola_Sabatina_Relógio.Properties.Resources.logo_es_3;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(784, 561);
             this.Controls.Add(this.panel1);

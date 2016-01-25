@@ -1,2 +1,2 @@
 # EscolaSabatinaRelogio
-Este é um aplicativo de Relógio\Contador Regressivo para indicar quando que as Escola Sabatina está prestes a termina
+Este é um relógio/contador regressivo usado para indicar automaticamente quando a Escola Sabatina está para terminar.

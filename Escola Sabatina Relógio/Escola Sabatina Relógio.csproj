@@ -177,13 +177,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="resources\help_icon.png" />
+    <EmbeddedResource Include="resources\help_icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="resources\logo_es_recortado.png" />
+    <EmbeddedResource Include="resources\logo_es_recortado.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="resources\logo_es_3.png" />
+    <EmbeddedResource Include="resources\logo_es_3.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

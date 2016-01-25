@@ -96,7 +96,7 @@ namespace Escola_Sabatina_Relógio
                 }
                 else
                 {
-                    lblTempoRestante.Text = diff.Minutes + "min";
+                    lblTempoRestante.Text = (diff.Hours*60+diff.Minutes) + "min";
                     lblTempoRestante.ForeColor = System.Drawing.Color.Black;
                 }
             }
@@ -129,8 +129,9 @@ namespace Escola_Sabatina_Relógio
                 if (isFullScreen)
                 {
                     isFullScreen = false;
-                    this.WindowState = FormWindowState.Maximized;
+                    this.WindowState = FormWindowState.Normal;
                     this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+                    this.Size = this.DefaultSize;
                 }
                 else
                 {
@@ -140,24 +141,28 @@ namespace Escola_Sabatina_Relógio
                     this.Bounds = Screen.PrimaryScreen.Bounds;
                 }
             }
+            if (e.KeyCode == Keys.Escape)
+            {
+                this.Dispose();
+            }
         }
         private void alterarFontes()
         {
             while (lblRelogio.Width > lblRelogio.Parent.Width)
             {
-                lblRelogio.Font = new System.Drawing.Font("Arial", lblRelogio.Font.Size - 0.5f);
+                lblRelogio.Font = new System.Drawing.Font("Arial", lblRelogio.Font.Size - 10);
             }
             while (lblRelogio.Width < lblRelogio.Parent.Width)
             {
-                lblRelogio.Font = new System.Drawing.Font("Arial", lblRelogio.Font.Size + 0.5f);
+                lblRelogio.Font = new System.Drawing.Font("Arial", lblRelogio.Font.Size + 10);
             }
             while (lblTempoRestante.Height > lblTempoRestante.Parent.Height)
             {
-                lblTempoRestante.Font = new System.Drawing.Font("Arial", lblTempoRestante.Font.Size - 0.5f);
+                lblTempoRestante.Font = new System.Drawing.Font("Arial", lblTempoRestante.Font.Size - 10);
             }
             while (lblTempoRestante.Height < lblTempoRestante.Parent.Height)
             {
-                lblTempoRestante.Font = new System.Drawing.Font("Arial", lblTempoRestante.Font.Size + 0.5f);
+                lblTempoRestante.Font = new System.Drawing.Font("Arial", lblTempoRestante.Font.Size + 10);
             }
             lblTempoRestanteTexto.Font = new System.Drawing.Font("Arial", lblTempoRestante.Font.Size/3);
             lblTempoRestanteTexto.Top = (lblTempoRestanteTexto.Parent.Height - lblTempoRestanteTexto.Height)/2;
@@ -178,6 +183,13 @@ namespace Escola_Sabatina_Relógio
             {
                 about.Activate();
             }
+        }
+
+        private void label1_MouseHover(object sender, System.EventArgs e)
+        {
+            System.Windows.Forms.ToolTip ToolTip1 = new System.Windows.Forms.ToolTip();
+            ToolTip1.SetToolTip(this.lblHelp, "Configure o horário do Término da Escola sabatina\n Selecione os alarmes de 1 minuto e/ou 5 minutos\n\nAperte ALT + Enter para colocar em tela cheia\nPressione Esc para sair");
+            ToolTip1.AutoPopDelay = 10000;
         }
     }
 }

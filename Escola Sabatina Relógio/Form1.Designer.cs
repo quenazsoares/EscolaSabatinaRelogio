@@ -33,6 +33,7 @@
             this.lblRelogio = new System.Windows.Forms.Label();
             this.dtpHora = new System.Windows.Forms.DateTimePicker();
             this.panelConfig = new System.Windows.Forms.Panel();
+            this.lblHelp = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.cbx1min = new System.Windows.Forms.CheckBox();
             this.cbx5min = new System.Windows.Forms.CheckBox();
@@ -79,6 +80,7 @@
             // panelConfig
             // 
             this.panelConfig.BackColor = System.Drawing.Color.Transparent;
+            this.panelConfig.Controls.Add(this.lblHelp);
             this.panelConfig.Controls.Add(this.button1);
             this.panelConfig.Controls.Add(this.cbx1min);
             this.panelConfig.Controls.Add(this.cbx5min);
@@ -89,6 +91,17 @@
             this.panelConfig.Name = "panelConfig";
             this.panelConfig.Size = new System.Drawing.Size(784, 51);
             this.panelConfig.TabIndex = 2;
+            // 
+            // lblHelp
+            // 
+            this.lblHelp.Dock = System.Windows.Forms.DockStyle.Right;
+            this.lblHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblHelp.Image = ((System.Drawing.Image)(resources.GetObject("lblHelp.Image")));
+            this.lblHelp.Location = new System.Drawing.Point(736, 0);
+            this.lblHelp.Name = "lblHelp";
+            this.lblHelp.Size = new System.Drawing.Size(48, 51);
+            this.lblHelp.TabIndex = 6;
+            this.lblHelp.MouseHover += new System.EventHandler(this.label1_MouseHover);
             // 
             // button1
             // 
@@ -232,6 +245,7 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label lblTempoRestanteTexto;
+        private System.Windows.Forms.Label lblHelp;
 
 
 

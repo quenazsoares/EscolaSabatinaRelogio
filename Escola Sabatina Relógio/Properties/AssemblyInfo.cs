@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Escola Sabatina Relógio")]
 [assembly: AssemblyDescription("Este é um relógio/contador regressivo usado para indicar automaticamente quando a Escola Sabatina está para terminar.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Quenaz Bezerra Soares")]
+[assembly: AssemblyCompany("Big Q Corp.")]
 [assembly: AssemblyProduct("Escola Sabatina Relógio")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]

@@ -150,7 +150,11 @@ namespace Escola_Sabatina_Relógio
         {
             while (lblRelogio.Width > lblRelogio.Parent.Width)
             {
-                lblRelogio.Font = new System.Drawing.Font("Arial", lblRelogio.Font.Size - 10);
+                if (lblRelogio.Font.Size > 20)
+                {
+                    lblRelogio.Font = new System.Drawing.Font("Arial", lblRelogio.Font.Size - 10);
+                }
+                else break;
             }
             while (lblRelogio.Width < lblRelogio.Parent.Width)
             {
@@ -158,7 +162,11 @@ namespace Escola_Sabatina_Relógio
             }
             while (lblTempoRestante.Height > lblTempoRestante.Parent.Height)
             {
-                lblTempoRestante.Font = new System.Drawing.Font("Arial", lblTempoRestante.Font.Size - 10);
+                if (lblTempoRestante.Font.Size > 20)
+                {
+                    lblTempoRestante.Font = new System.Drawing.Font("Arial", lblTempoRestante.Font.Size - 10);
+                }
+                else break;
             }
             while (lblTempoRestante.Height < lblTempoRestante.Parent.Height)
             {

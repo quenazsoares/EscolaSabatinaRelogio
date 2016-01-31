@@ -103,13 +103,11 @@ namespace Escola_Sabatina_Relógio
 
         private void okButton_Click(object sender, EventArgs e)
         {
-            Form1.about.Dispose();
             Form1.about = null;
         }
 
         private void AboutBox1_Deactivate(object sender, EventArgs e)
         {
-            Form1.about.Dispose();
             Form1.about = null;
         }
     }

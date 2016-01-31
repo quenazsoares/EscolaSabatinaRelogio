@@ -6,22 +6,26 @@ namespace Escola_Sabatina_Relógio
 {
     public partial class Form1 : Form
     {
-        private bool _5min = true,
-            _1min = true,
-            alarme = false,
+        public static bool _5min = true,
+            _1min = true;
+        public static System.DateTime horario;
+
+        private bool alarme = false,
             menos6min = false,
             isFullScreen = false;
-        private System.DateTime alarmeTime;
         WMPLib.WindowsMediaPlayer wplayer = new WMPLib.WindowsMediaPlayer();
         string _1minPath, _5minPath;
         public static AboutBox1 about = null;
+
         public Form1()
         {
             InitializeComponent();
-            System.DateTime d = System.DateTime.Today;
-            d=d.AddHours(10);
-            d=d.AddMinutes(10);
-            dtpHora.Value = d;
+            _1min = Properties.Settings.Default._1min;
+            _5min = Properties.Settings.Default._5min;
+            menuStrip.BackColor = System.Drawing.ColorTranslator.FromHtml("#88ffffff");
+            horario = System.DateTime.Today;
+            horario = horario.AddHours(Properties.Settings.Default.Hora); //Utiliza a configuração padrão de hora
+            horario = horario.AddMinutes(Properties.Settings.Default.Minuto); //Utiliza a configuração padrão de minuto
             alterarFontes();
             lblRelogio.Text = System.DateTime.Now.ToString("HH:mm");
             timer1.Interval = 1000;
@@ -31,38 +35,12 @@ namespace Escola_Sabatina_Relógio
             _5minPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\resources\\mp3_5min.mp3";
         }
 
-        private void button1_Click(object sender, System.EventArgs e)
-        {
-            menos6min = false;
-            if (alarme)
-            {
-                btnAlarme.Text = "Ativar Alarme";
-                dtpHora.Enabled = true;
-                cbx1min.Enabled = true;
-                cbx5min.Enabled = true;
-                alarme = false;
-                timer1.Interval = 1000;
-                lblTempoRestante.Text = "---min";
-            }
-            else
-            {
-                btnAlarme.Text = "Desativar Alarme";
-                dtpHora.Enabled = false;
-                cbx1min.Enabled = false;
-                cbx5min.Enabled = false;
-                alarme = true;
-                _5min = true;
-                _1min = true;
-
-            }
-        }
-
         private void timer1_Tick(object sender, System.EventArgs e)
         {
             lblRelogio.Text = System.DateTime.Now.ToString("HH:mm");
             if (alarme)
             {
-                System.TimeSpan diff = alarmeTime.Subtract(System.DateTime.Now);
+                System.TimeSpan diff = horario.Subtract(System.DateTime.Now);
                 if (_5min && diff.Minutes <= 5 && diff.Minutes > 1)
                 {
                     _5min = false;
@@ -102,21 +80,6 @@ namespace Escola_Sabatina_Relógio
             }
         }
 
-        private void cbx5min_CheckedChanged(object sender, System.EventArgs e)
-        {
-            _5min = !_5min;
-        }
-
-        private void cbx1min_CheckedChanged(object sender, System.EventArgs e)
-        {
-            _1min = !_1min;
-        }
-
-        private void dtpHora_ValueChanged(object sender, System.EventArgs e)
-        {
-            alarmeTime = dtpHora.Value;
-        }
-
         private void Form1_Resize(object sender, System.EventArgs e)
         {
             alterarFontes();
@@ -129,6 +92,7 @@ namespace Escola_Sabatina_Relógio
                 if (isFullScreen)
                 {
                     isFullScreen = false;
+                    menuStrip.Visible = true;
                     this.WindowState = FormWindowState.Normal;
                     this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
                     this.Size = this.DefaultSize;
@@ -136,6 +100,7 @@ namespace Escola_Sabatina_Relógio
                 else
                 {
                     isFullScreen = true;
+                    menuStrip.Visible = false;
                     this.WindowState = FormWindowState.Normal;
                     this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
                     this.Bounds = Screen.PrimaryScreen.Bounds;
@@ -146,6 +111,7 @@ namespace Escola_Sabatina_Relógio
                 this.Dispose();
             }
         }
+
         private void alterarFontes()
         {
             while (lblRelogio.Width > lblRelogio.Parent.Width)
@@ -180,24 +146,48 @@ namespace Escola_Sabatina_Relógio
             lblRelogio.Top = (lblRelogio.Parent.Height - lblRelogio.Height - panel2.Height) / 2;
         }
 
-        private void button1_Click_1(object sender, System.EventArgs e)
+        private void configurarToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
-            if (about == null)
+            new configuracao().ShowDialog(this);
+        }
+
+        private void iniciarToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            menos6min = false;
+            if (alarme) // Se alarme for verdadeiro, significa que o alarme estava funcionando e agora deve-se parar
             {
-                about = new AboutBox1();
-                about.Visible = true;
+                iniciarToolStripMenuItem.Text = "Iniciar";
+                configurarToolStripMenuItem.Enabled = true;
+                configurarToolStripMenuItem.ToolTipText = "";
+                alarme = false;
+                timer1.Interval = 1000;
+                lblTempoRestante.Text = "---min";
             }
             else
             {
-                about.Activate();
+                iniciarToolStripMenuItem.Text = "Parar";
+                configurarToolStripMenuItem.Enabled = false;
+                configurarToolStripMenuItem.ToolTipText = "É necessário parar o alarme para configurar";
+                alarme = true;
+                _5min = true;
+                _1min = true;
+
             }
         }
 
-        private void label1_MouseHover(object sender, System.EventArgs e)
+        private void ajudaToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
-            System.Windows.Forms.ToolTip ToolTip1 = new System.Windows.Forms.ToolTip();
-            ToolTip1.SetToolTip(this.lblHelp, "Configure o horário do Término da Escola sabatina\n Selecione os alarmes de 1 minuto e/ou 5 minutos\n\nAperte ALT + Enter para colocar em tela cheia\nPressione Esc para sair");
-            ToolTip1.AutoPopDelay = 10000;
+            string ajuda = "Lembre-se de configurar ou definir uma configuração padrão antes de iniciar o alarme/contador regressivo. "+
+                "Para isto clique no menu CONFIGURAR.\n\nPara ativar o alarme/contador regressivo clique no menu INICIAR\n" + 
+                "Enquanto estiver ativo o clique no menu PARAR para desativar\n\n" + 
+                "Para entrar e sair do modo de tela cheia aperte ALT+Enter\n\n" +
+                "Para sair do programa clique no botão de fechar ou aperte ESC";
+            System.Windows.MessageBox.Show(ajuda, "AJUDA");
+        }
+
+        private void sobreToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            new AboutBox1().ShowDialog(this);
         }
     }
 }

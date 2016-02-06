@@ -70,5 +70,29 @@ namespace Escola_Sabatina_Relógio.Properties {
                 this["_1min"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool exibir_relogio {
+            get {
+                return ((bool)(this["exibir_relogio"]));
+            }
+            set {
+                this["exibir_relogio"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool exibir_minutos_restantes {
+            get {
+                return ((bool)(this["exibir_minutos_restantes"]));
+            }
+            set {
+                this["exibir_minutos_restantes"] = value;
+            }
+        }
     }
 }

@@ -1,4 +1,9 @@
-﻿using System;
+﻿/* 
+ * Arquivo: AboutBox1.cs
+ * Autor: Quenaz Bezerra Soares
+ */
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -18,7 +23,7 @@ namespace Escola_Sabatina_Relógio
             this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
             this.labelCopyright.Text = AssemblyCopyright;
             this.labelCompanyName.Text = AssemblyCompany;
-            this.textBoxDescription.Text = AssemblyDescription;
+            this.textBoxDescription.Text = AssemblyDescription +"\r\n\r\n"+ "Áudios retirados do Blog Daniel Gonçalves (daniellocutor.com.br)";
         }
 
         #region Assembly Attribute Accessors

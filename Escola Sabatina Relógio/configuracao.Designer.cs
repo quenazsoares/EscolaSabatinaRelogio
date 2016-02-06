@@ -59,6 +59,7 @@
             this.dtpHorario.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dtpHorario.Location = new System.Drawing.Point(73, 13);
             this.dtpHorario.Name = "dtpHorario";
+            this.dtpHorario.ShowUpDown = true;
             this.dtpHorario.Size = new System.Drawing.Size(63, 26);
             this.dtpHorario.TabIndex = 1;
             this.toolTipString.SetToolTip(this.dtpHorario, "Horário no qual a Escola Sabatina irá terminar.");
@@ -128,6 +129,7 @@
             // btnCancelar
             // 
             this.btnCancelar.AutoSize = true;
+            this.btnCancelar.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancelar.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCancelar.Location = new System.Drawing.Point(95, 152);
             this.btnCancelar.Name = "btnCancelar";

@@ -61,12 +61,12 @@ namespace Escola_Sabatina_Relógio.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Bitmap help_icon {
+        internal static System.Drawing.Icon es_icon {
             get {
-                object obj = ResourceManager.GetObject("help_icon", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                object obj = ResourceManager.GetObject("es_icon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
         

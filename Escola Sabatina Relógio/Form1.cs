@@ -17,6 +17,11 @@ namespace Escola_Sabatina_Relógio
         string _1minPath, _5minPath;
         public static AboutBox1 about = null;
 
+        //Usado para suspender a atualização da tela
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        public static extern int SendMessage(System.IntPtr hWnd, System.Int32 wMsg, bool wParam, System.Int32 lParam);
+        private const int WM_SETREDRAW = 11;
+
         public Form1()
         {
             InitializeComponent();
@@ -33,6 +38,10 @@ namespace Escola_Sabatina_Relógio
             //Inicializa a localização dos audios
             _1minPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\resources\\mp3_1min.mp3";
             _5minPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\resources\\mp3_5min.mp3";
+            if (!System.IO.File.Exists(_1minPath) || !System.IO.File.Exists(_5minPath))
+                System.Windows.MessageBox.Show("Arquivos de áudio foram deletados ou corrompidos\nReinstale o programa para corrigir.", "Falha ao abrir áudios", System.Windows.MessageBoxButton.OK, MessageBoxImage.Error);
+
+            configurarExibicao();
         }
 
         private void timer1_Tick(object sender, System.EventArgs e)
@@ -89,6 +98,7 @@ namespace Escola_Sabatina_Relógio
         {
             if (e.Alt && e.KeyCode == Keys.Enter)
             {
+                SendMessage(panelFundo.Handle, WM_SETREDRAW, false, 0);
                 if (isFullScreen)
                 {
                     isFullScreen = false;
@@ -96,15 +106,20 @@ namespace Escola_Sabatina_Relógio
                     this.WindowState = FormWindowState.Normal;
                     this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
                     this.Size = this.DefaultSize;
+                    alterarFontes();
                 }
                 else
                 {
+                    
                     isFullScreen = true;
                     menuStrip.Visible = false;
                     this.WindowState = FormWindowState.Normal;
                     this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
                     this.Bounds = Screen.PrimaryScreen.Bounds;
+                    alterarFontes();
+                    
                 }
+                SendMessage(panelFundo.Handle, WM_SETREDRAW, true, 0);
             }
             if (e.KeyCode == Keys.Escape)
             {
@@ -114,30 +129,39 @@ namespace Escola_Sabatina_Relógio
 
         private void alterarFontes()
         {
-            while (lblRelogio.Width > lblRelogio.Parent.Width)
+            if (this.WindowState == FormWindowState.Minimized)
+                return;
+            if (this.Size.Width < this.MinimumSize.Width)
+                return;
+            System.Drawing.Graphics auxGraph = CreateGraphics();
+            int tamanhoFonte = 100;
+            float largura = auxGraph.MeasureString(lblRelogio.Text, new System.Drawing.Font("Arial", tamanhoFonte)).Width;
+            while (largura > lblRelogio.Parent.Width)
             {
-                if (lblRelogio.Font.Size > 20)
-                {
-                    lblRelogio.Font = new System.Drawing.Font("Arial", lblRelogio.Font.Size - 10);
-                }
-                else break;
+                tamanhoFonte -= 5;
+                largura = auxGraph.MeasureString(lblRelogio.Text, new System.Drawing.Font("Arial", tamanhoFonte)).Width;
             }
-            while (lblRelogio.Width < lblRelogio.Parent.Width)
+            while (largura < lblRelogio.Parent.Width)
             {
-                lblRelogio.Font = new System.Drawing.Font("Arial", lblRelogio.Font.Size + 10);
+                tamanhoFonte += 5;
+                largura = auxGraph.MeasureString(lblRelogio.Text, new System.Drawing.Font("Arial", tamanhoFonte)).Width;
             }
-            while (lblTempoRestante.Height > lblTempoRestante.Parent.Height)
+            lblRelogio.Font = new System.Drawing.Font("Arial", tamanhoFonte);
+
+            tamanhoFonte = 100;
+            float altura = auxGraph.MeasureString(lblTempoRestante.Text, new System.Drawing.Font("Arial", tamanhoFonte)).Height;
+            while (altura > lblTempoRestante.Parent.Height)
             {
-                if (lblTempoRestante.Font.Size > 20)
-                {
-                    lblTempoRestante.Font = new System.Drawing.Font("Arial", lblTempoRestante.Font.Size - 10);
-                }
-                else break;
+                tamanhoFonte -= 5;
+                altura = auxGraph.MeasureString(lblTempoRestante.Text, new System.Drawing.Font("Arial", tamanhoFonte)).Height;
             }
-            while (lblTempoRestante.Height < lblTempoRestante.Parent.Height)
+            while (altura < lblTempoRestante.Parent.Height)
             {
-                lblTempoRestante.Font = new System.Drawing.Font("Arial", lblTempoRestante.Font.Size + 10);
+                tamanhoFonte += 5;
+                altura = auxGraph.MeasureString(lblTempoRestante.Text, new System.Drawing.Font("Arial", tamanhoFonte)).Height;
             }
+            lblTempoRestante.Font = new System.Drawing.Font("Arial", tamanhoFonte);
+
             lblTempoRestanteTexto.Font = new System.Drawing.Font("Arial", lblTempoRestante.Font.Size/3);
             lblTempoRestanteTexto.Top = (lblTempoRestanteTexto.Parent.Height - lblTempoRestanteTexto.Height)/2;
             lblTempoRestanteTexto.Left = (lblTempoRestanteTexto.Parent.Width - lblTempoRestanteTexto.Width - lblTempoRestante.Width)/2;
@@ -162,16 +186,29 @@ namespace Escola_Sabatina_Relógio
                 alarme = false;
                 timer1.Interval = 1000;
                 lblTempoRestante.Text = "---min";
+                lblTempoRestante.ForeColor = lblTempoRestanteTexto.ForeColor;
             }
             else
             {
-                iniciarToolStripMenuItem.Text = "Parar";
-                configurarToolStripMenuItem.Enabled = false;
-                configurarToolStripMenuItem.ToolTipText = "É necessário parar o alarme para configurar";
-                alarme = true;
-                _5min = true;
-                _1min = true;
-
+                System.TimeSpan diff = horario.Subtract(System.DateTime.Now);
+                string mensagem = horario.Hour + ":" + horario.Minute;
+                if (_5min) mensagem = mensagem + "\nTocar áudio faltando 5 minutos";
+                if (_1min) mensagem = mensagem + "\nTocar áudio faltando 1 minuto";
+                exibirNotificacao(mensagem,"Configuração selecionada", 5);
+                if (diff.Hours >= 0 && diff.Minutes >= 0 && diff.Seconds >= 0)
+                {
+                    iniciarToolStripMenuItem.Text = "Parar";
+                    configurarToolStripMenuItem.Enabled = false;
+                    configurarToolStripMenuItem.ToolTipText = "É necessário parar o alarme para configurar";
+                    alarme = true;
+                    _5min = true;
+                    _1min = true;
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show("O horário selecionado encontra-se no passado, vá no menu CONFIGURAÇÃO e selecione um horário futuro. \n"+
+                        "Caso o horário esteja selecionado corretamente, verifique o relógio do sistema.", "ERRO - Horário inválido", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -181,7 +218,9 @@ namespace Escola_Sabatina_Relógio
                 "Para isto clique no menu CONFIGURAR.\n\nPara ativar o alarme/contador regressivo clique no menu INICIAR\n" + 
                 "Enquanto estiver ativo o clique no menu PARAR para desativar\n\n" + 
                 "Para entrar e sair do modo de tela cheia aperte ALT+Enter\n\n" +
-                "Para sair do programa clique no botão de fechar ou aperte ESC";
+                "Para sair do programa clique no botão de fechar ou aperte ESC\n\n" +
+                "O menu EXIBIR serve para selecionar se o relógio e o mostrador de minutos restantes serão visíveis, " +
+                "recomenda-se que o relógio e o mostrador de minutos restantes sejam exibidos em telas que apenas os professores irão ver.";
             System.Windows.MessageBox.Show(ajuda, "AJUDA");
         }
 
@@ -189,5 +228,79 @@ namespace Escola_Sabatina_Relógio
         {
             new AboutBox1().ShowDialog(this);
         }
+
+        private void configurarExibicao()
+        {
+            //Configura a exibição dos componentes
+            relógioToolStripMenuItem.Checked = Properties.Settings.Default.exibir_relogio;
+            minutosRestantesToolStripMenuItem.Checked = Properties.Settings.Default.exibir_minutos_restantes;
+            apenasLogoESToolStripMenuItem.Checked = !(Properties.Settings.Default.exibir_relogio || Properties.Settings.Default.exibir_minutos_restantes);
+            lblRelogio.Visible = Properties.Settings.Default.exibir_relogio;
+            lblTempoRestante.Visible = Properties.Settings.Default.exibir_minutos_restantes;
+            lblTempoRestanteTexto.Visible = Properties.Settings.Default.exibir_minutos_restantes;
+            panelOpaco.BackColor = System.Drawing.Color.FromArgb(apenasLogoESToolStripMenuItem.Checked ? 0 : 216, 255, 255, 255);
+        }
+
+        private void relógioToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            Properties.Settings.Default.exibir_relogio = relógioToolStripMenuItem.Checked;
+            configurarExibicao();
+        }
+
+        private void minutosRestantesToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            Properties.Settings.Default.exibir_minutos_restantes = minutosRestantesToolStripMenuItem.Checked;
+            configurarExibicao();
+        }
+
+        private void apenasLogoESToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            Properties.Settings.Default.exibir_minutos_restantes = !apenasLogoESToolStripMenuItem.Checked;
+            Properties.Settings.Default.exibir_relogio = !apenasLogoESToolStripMenuItem.Checked;
+            configurarExibicao();
+        }
+
+        private void exibirNotificacao(string mensagem, string titulo, int duracao)
+        {
+            var notification = new System.Windows.Forms.NotifyIcon()
+            {
+                Visible = true,
+                Icon = this.Icon,
+                BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info,
+                BalloonTipTitle = titulo,
+                BalloonTipText = mensagem,
+            };
+            // Display for 5 seconds.
+            notification.ShowBalloonTip(duracao);
+        }
+
+        protected override void WndProc(ref Message m)//Para controlar a alteração das fontes quando maximizamos a janela
+        {
+            FormWindowState previousWindowState = this.WindowState;
+            base.WndProc(ref m);
+            FormWindowState currentWindowState = this.WindowState;
+            if (previousWindowState != currentWindowState)
+            {
+                alterarFontes();
+            }
+        }
+
+        private void tocarÁudioDe1MinutoToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            wplayer.URL = _1minPath;
+            wplayer.controls.play();
+        }
+
+        private void tocarÁudioDe5MinutosToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            wplayer.URL = _5minPath;
+            wplayer.controls.play();
+        }
+
+        private void pararÁudioToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            wplayer.controls.stop();
+        }
+
     }
 }

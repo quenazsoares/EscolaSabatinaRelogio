@@ -202,6 +202,9 @@
     <Content Include="resources\ES_icon.ico" />
     <Content Include="resources\logo_es_3.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Install\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
